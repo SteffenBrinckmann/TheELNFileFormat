@@ -100,7 +100,7 @@ if __name__ == '__main__':
             # use the exposed Path from ziplib
             p = ZPath(elnFile)
             # there should be only one folder so we just consider the first one
-            dirName = sorted(p.iterdir())[0]
+            dirName = Path(sorted(str(i) for i in p.iterdir())[0])
             metadataJsonFile = dirName.joinpath(METADATA_FILE)
             if metadataJsonFile.is_file():
                 print(f'Found metadata file: {metadataJsonFile}')
