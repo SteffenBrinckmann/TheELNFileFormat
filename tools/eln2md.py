@@ -63,9 +63,7 @@ def tree(metadata):
     output += '- ./\n'
     # iteratively go through list
     for part in main_node['hasPart']:
-        output += process_part(
-            part, 1
-        )
+        output += process_part(part, 1)
     return output
 
 
