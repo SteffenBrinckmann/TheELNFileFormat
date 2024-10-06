@@ -5,7 +5,6 @@ import shutil
 import argparse
 from pathlib import Path
 from zipfile import ZIP_DEFLATED
-from zipfile import Path as ZPath
 from zipfile import ZipFile
 
 README_FILE = 'README.md'
@@ -20,7 +19,7 @@ def simplify(metadata):
     for item in metadata['@graph']:
         if item['@id'] in [METADATA_FILE, './']:
             continue
-        for subitem in [i for i in item]: # pylint: disable=unnecessary-comprehension
+        for subitem in list(item): # pylint: disable=unnecessary-comprehension
             if subitem not in ['@id', '@type', 'hasPart']:
                 del item[subitem]
     return json.dumps(metadata, indent=2)
@@ -41,29 +40,25 @@ def tree(metadata):
             i for i in metadata['@graph'] if '@id' in i and i['@id'] == part['@id']
         ]
         if len(new_node) == 1:
-            output += (
-                ',  items: ' + str(len(new_node[0]) - 1) + ' \n'
-            )  # -1 because @id is not counted
+            output += f',  items: {str(len(new_node[0]) - 1)}' + ' \n' # -1 because @id is not counted
             subparts = new_node[0].pop('hasPart') if 'hasPart' in new_node[0] else []
             if len(subparts) > 0:  # don't do if no subparts: measurements, ...
                 for subpart in subparts:
                     output += process_part(subpart, level + 1)
         else:
-            output += (
-                ',  items: ' + str(len(part) - 1) + '\n'
-            )  # -1 because @id is not counted
+            output += f',  items: {str(len(part) - 1)}' + '\n' # -1 because @id is not counted
         return output
 
     # main tree-function
     graph = metadata["@graph"]
     # find information from master node
     ro_crate_node = [i for i in graph if i["@id"] == METADATA_FILE][0]
-    output = '- '+METADATA_FILE+'\n'
+    output = f'- {METADATA_FILE}\n'
     if 'sdPublisher' in ro_crate_node:
         name = ro_crate_node['sdPublisher'].get('name','---')
-        output += '    - publisher: ' + name  + '\n'
+        output += f'    - publisher: {name}\n'
     if 'version' in ro_crate_node:
-        output += '    - version: ' + ro_crate_node['version'] + '\n'
+        output += f'    - version: {ro_crate_node["version"]}\n'
     main_node = [i for i in graph if i["@id"] == "./"][0]
     output += '- ./\n'
     # iteratively go through list
@@ -96,25 +91,20 @@ if __name__ == '__main__':
 
     for fileName in cwd.glob('*.eln'):
         outfile.write(f'\n### {fileName.name}\n')
-        with ZipFile(fileName, 'r', compression=ZIP_DEFLATED) as elnFile:
-            # use the exposed Path from ziplib
-            p = ZPath(elnFile)
-            # there should be only one folder so we just consider the first one
-            dirName = Path(sorted(str(i) for i in p.iterdir())[0])
-            metadataJsonFile = dirName.joinpath(METADATA_FILE)
-            if metadataJsonFile.is_file():
-                print(f'Found metadata file: {metadataJsonFile}')
-                metadataContent = json.loads(metadataJsonFile.read_bytes())
-                if args.format == 'full':
-                    outputString = json.dumps(metadataContent, indent=2)
-                    outfile.write(f'```json\n{outputString}\n```\n')
-                elif args.format == 'short':
-                    outputString = simplify(metadataContent)
-                    outfile.write(f'```json\n{outputString}\n```\n')
-                elif args.format == 'tree':
-                    outputString = tree(metadataContent)
-                    print(outputString)
-                    outfile.write(f'```yml\n{outputString}\n```\n')
-                else:
-                    print("**ERROR: unknown format")
+        with ZipFile(fileName, 'r') as elnFile:
+            metadataJsonFile = [i for i in elnFile.namelist() if i.endswith(METADATA_FILE)][0]
+            print(f'Found metadata file: {metadataJsonFile}')
+            metadataContent = json.loads(elnFile.read(metadataJsonFile))
+            if args.format == 'full':
+                outputString = json.dumps(metadataContent, indent=2)
+                outfile.write(f'```json\n{outputString}\n```\n')
+            elif args.format == 'short':
+                outputString = simplify(metadataContent)
+                outfile.write(f'```json\n{outputString}\n```\n')
+            elif args.format == 'tree':
+                outputString = tree(metadataContent)
+                print(outputString)
+                outfile.write(f'```yml\n{outputString}\n```\n')
+            else:
+                print("**ERROR: unknown format")
     outfile.close()
