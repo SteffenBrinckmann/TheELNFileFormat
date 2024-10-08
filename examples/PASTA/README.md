@@ -19,8 +19,8 @@ Its home is at: https://github.com/PASTA-ELN
       },
       "schemaVersion": "v1.0",
       "version": "1.0",
-      "datePublished": "2024-10-08T14:15:57.000409",
-      "dateCreated": "2024-10-08T14:15:57.000432",
+      "datePublished": "2024-10-08T14:30:20.775111",
+      "dateCreated": "2024-10-08T14:30:20.775134",
       "sdPublisher": {
         "@id": "PASTA-ELN"
       }
@@ -59,13 +59,13 @@ Its home is at: https://github.com/PASTA-ELN
       "@type": "Dataset",
       "hasPart": [
         {
-          "@id": "./PASTA/PastasExampleProject/"
+          "@id": "./PastasExampleProject/"
         }
       ],
       "name": "Exported from PASTA ELN",
       "description": "Exported content from PASTA ELN",
       "license": "CC BY 4.0",
-      "datePublished": "2024-10-08T14:15:57.000483",
+      "datePublished": "2024-10-08T14:30:20.775160",
       "author": [
         {
           "@id": "author_Steffen_Brinckmann"

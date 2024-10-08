@@ -22,6 +22,7 @@ Steps:
 ``` bash
 git checkout playground
 cp /tmp/PASTA.eln examples/PASTA/PASTA.eln
+python tools/compare.py
 python tools/eln2md.py -d examples/PASTA/
 tail examples/PASTA/README.md
 git commit -a -m 'updated eln export of pasta-eln'
