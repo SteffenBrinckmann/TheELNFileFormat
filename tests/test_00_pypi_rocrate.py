@@ -5,11 +5,10 @@ https://pypi.org/project/rocrate/
 """
 import os
 import json
-import unittest
+import unittest, traceback
 import tempfile
 from pathlib import Path
 from zipfile import ZIP_DEFLATED
-from zipfile import Path as ZPath
 from zipfile import ZipFile
 from rocrate.rocrate import ROCrate
 
@@ -35,12 +34,11 @@ class Test_1(unittest.TestCase):
                 fileName = os.path.join(root, name)
                 print(f'\n\nTry to parse: {fileName}')
                 with ZipFile(fileName, 'r', compression=ZIP_DEFLATED) as elnFile:
-                    p = ZPath(elnFile)
-                    dirName = sorted(p.iterdir())[0]
+                    dirName = os.path.splitext(os.path.basename(fileName))[0]
                     try:
                         dirpath = Path(tempfile.mkdtemp())
                         elnFile.extractall(dirpath)
-                        temppath= dirpath.joinpath(dirName.name)
+                        temppath= dirpath.joinpath(dirName)
                         crate = ROCrate(temppath)
                         for e in crate.get_entities():
                             print(f'  {e.id}: {e.type}')
@@ -50,6 +48,7 @@ class Test_1(unittest.TestCase):
                             logJson[fileName] = logJson[fileName] | {'pypi_rocrate':True}
                     except Exception:
                         print("  *****  ERROR: Could not parse content of this file!!  *****")
+                        print(traceback.format_exc())
                         if fileName not in logJson:
                             logJson[fileName] = {'pypi_rocrate':False}
                         else:
