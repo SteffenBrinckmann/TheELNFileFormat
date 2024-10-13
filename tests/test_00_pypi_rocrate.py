@@ -12,6 +12,8 @@ from zipfile import ZIP_DEFLATED
 from zipfile import ZipFile
 from rocrate.rocrate import ROCrate
 
+LABEL = 'pypi_rocrate'
+
 class Test_1(unittest.TestCase):
     """
     derived class for this test
@@ -43,16 +45,16 @@ class Test_1(unittest.TestCase):
                         for e in crate.get_entities():
                             print(f'  {e.id}: {e.type}')
                         if fileName not in logJson:
-                            logJson[fileName] = {'pypi_rocrate':True}
+                            logJson[fileName] = {LABEL:True}
                         else:
-                            logJson[fileName] = logJson[fileName] | {'pypi_rocrate':True}
+                            logJson[fileName] = logJson[fileName] | {LABEL:True}
                     except Exception:
                         print("  *****  ERROR: Could not parse content of this file!!  *****")
                         print(traceback.format_exc())
                         if fileName not in logJson:
-                            logJson[fileName] = {'pypi_rocrate':False}
+                            logJson[fileName] = {LABEL:False}
                         else:
-                            logJson[fileName] = logJson[fileName] | {'pypi_rocrate':False}
+                            logJson[fileName] = logJson[fileName] | {LABEL:False}
                         success = False
         json.dump(logJson, open('tests/logging.json', 'w'))
         assert success

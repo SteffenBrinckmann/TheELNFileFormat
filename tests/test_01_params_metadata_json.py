@@ -8,6 +8,7 @@ from zipfile import ZIP_DEFLATED
 from zipfile import Path as ZPath
 from zipfile import ZipFile
 
+
 class Test_2(unittest.TestCase):
     """
     derived class for this test
@@ -28,6 +29,7 @@ class Test_2(unittest.TestCase):
         OUTPUT_INFO = False
         OUTPUT_COUNTS = True
         KNOWN_KEYS = DATASET_MANDATORY+DATASET_SUGGESTED+FILE_MANDATORY+FILE_SUGGESTED+['@id', '@type']
+        LABEL = 'params_metadata_json'
 
         # log-file
         if Path('tests/logging.json').exists():
@@ -108,9 +110,9 @@ class Test_2(unittest.TestCase):
                     for partI in main_node['hasPart']:
                         success = processNode(graph, partI['@id']) and success
                     if fileName not in logJson:
-                        logJson[fileName] = {'params_metadata_json':success}
+                        logJson[fileName] = {LABEL:success}
                     else:
-                        logJson[fileName] = logJson[fileName] | {'params_metadata_json':success}
+                        logJson[fileName] = logJson[fileName] | {LABEL:success}
 
                     # count occurances of all keys
                     counts = {}
