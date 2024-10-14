@@ -22,7 +22,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest rocrate jsonschema
+          pip install pytest rocrate=0.10.0 jsonschema
       - name: Test with pytest
         run: |
           pytest --tb=short -s
