@@ -1,3 +1,6 @@
+# Pytest
+python -m pytest -s --tb=short tests/
+
 # Workflow
 ## Branches
 - master: do not change here; use this to copy changes from Consortium to own repository
