@@ -44,6 +44,6 @@ class Test_1(unittest.TestCase):
                     for error in sorted(validator.iter_errors(metadataContent), key=str):
                         print(f'- {error.message}')
                         success = False
-                logJson[name] = {LABEL: success}
+                logJson[fileName] = {LABEL: success}
             json.dump(logJson, open('tests/logging.json', 'w'))
         assert success
