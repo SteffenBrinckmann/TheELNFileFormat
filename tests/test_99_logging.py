@@ -18,6 +18,7 @@ class Test_2(unittest.TestCase):
         """
         if Path('tests/logging.json').exists():
             logJson = json.load(open('tests/logging.json'))
+            print(logJson)
             with open('tests/logging.md', 'w') as output:
                 output.write(HEADER)
                 output.write(f'| software | file name | {" | ".join(COLUMNS)} |\n')

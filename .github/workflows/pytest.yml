@@ -26,6 +26,7 @@ jobs:
       - name: Test with pytest
         run: |
           pytest --tb=short -s
+          tree ~
         continue-on-error: true
       - name: Create action summary
         run: |
